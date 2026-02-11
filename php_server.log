@@ -1,0 +1,19 @@
+[Wed Feb 11 14:01:11 2026] PHP 8.3.6 Development Server (http://localhost:8080) started
+[Wed Feb 11 14:01:48 2026] [::1]:46230 Accepted
+[Wed Feb 11 14:01:48 2026] [::1]:46230 [200]: GET /web_editor/index.html
+[Wed Feb 11 14:01:48 2026] [::1]:46230 Closing
+[Wed Feb 11 14:01:48 2026] [::1]:46246 Accepted
+[Wed Feb 11 14:01:48 2026] [::1]:46250 Accepted
+[Wed Feb 11 14:01:48 2026] [::1]:46246 [200]: GET /web_editor/css/style.css
+[Wed Feb 11 14:01:48 2026] [::1]:46246 Closing
+[Wed Feb 11 14:01:48 2026] [::1]:46250 [200]: GET /web_editor/js/editor.js
+[Wed Feb 11 14:01:48 2026] [::1]:46250 Closing
+[Wed Feb 11 14:02:36 2026] [::1]:46958 Accepted
+[Wed Feb 11 14:02:36 2026] [::1]:46958 [200]: GET /web_editor/index.html
+[Wed Feb 11 14:02:36 2026] [::1]:46958 Closing
+[Wed Feb 11 14:02:36 2026] [::1]:46960 Accepted
+[Wed Feb 11 14:02:36 2026] [::1]:46974 Accepted
+[Wed Feb 11 14:02:36 2026] [::1]:46960 [200]: GET /web_editor/css/style.css
+[Wed Feb 11 14:02:36 2026] [::1]:46974 [200]: GET /web_editor/js/editor.js
+[Wed Feb 11 14:02:36 2026] [::1]:46960 Closing
+[Wed Feb 11 14:02:36 2026] [::1]:46974 Closing

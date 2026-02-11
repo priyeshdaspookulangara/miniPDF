@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniPDF WYSIWYG Editor</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="toolbar">
+            <div class="toolbar-group">
+                <button type="button" onclick="execCommand('bold')" title="Bold"><b>B</b></button>
+                <button type="button" onclick="execCommand('formatBlock', 'h1')" title="Heading 1">H1</button>
+                <button type="button" onclick="execCommand('formatBlock', 'p')" title="Paragraph">P</button>
+            </div>
+            <div class="toolbar-group">
+                <button type="button" onclick="execCommand('justifyLeft')" title="Align Left">Left</button>
+                <button type="button" onclick="execCommand('justifyCenter')" title="Align Center">Center</button>
+                <button type="button" onclick="execCommand('justifyRight')" title="Align Right">Right</button>
+            </div>
+            <div class="toolbar-group">
+                <input type="color" id="colorPicker" onchange="execCommand('foreColor', this.value)" title="Text Color">
+            </div>
+            <div class="toolbar-group">
+                <button type="button" id="previewBtn" onclick="togglePreview()">Preview</button>
+                <button type="button" class="btn-primary" onclick="exportPDF()">Export PDF</button>
+            </div>
+        </header>
+
+        <main class="editor-area">
+            <div class="page-container">
+                <div id="editor" contenteditable="true" class="page">
+                    <h1>Welcome to MiniPDF Editor</h1>
+                    <p>Start designing your document here. You can use <b>bold</b>, change alignment, or pick a color.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/editor.js"></script>
+</body>
+</html>

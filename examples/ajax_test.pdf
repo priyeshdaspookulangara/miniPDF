@@ -1,0 +1,67 @@
+%PDF-1.7
+%\xe2\xe3\xcf\xd3
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /MediaBox [0 0 595.28 841.89] /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 340 >>
+stream
+BT
+/F2 24 Tf
+1.00 0.00 0.00 rg
+243.64 755.89 Td
+(AJAX Test) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+50.00 732.89 Td
+(Testing the ) Tj
+ET
+BT
+/F2 12 Tf
+0.00 0.00 0.00 rg
+122.00 732.89 Td
+(integration) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+188.00 732.89 Td
+( flow.) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+437.28 709.89 Td
+(Right aligned text) Tj
+ET
+
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f
+0000000015 00000 n
+0000000064 00000 n
+0000000121 00000 n
+0000000263 00000 n
+0000000654 00000 n
+0000000724 00000 n
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+799
+%%EOF
