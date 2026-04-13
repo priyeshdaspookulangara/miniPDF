@@ -1,0 +1,625 @@
+%PDF-1.7
+%\xe2\xe3\xcf\xd3
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R /F3 7 0 R /F4 8 0 R >> >> /MediaBox [0 0 595.28 841.89] /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 5995 >>
+stream
+BT
+/F2 24 Tf
+0.00 0.00 0.00 rg
+50.00 755.89 Td
+(Table) Tj
+ET
+BT
+/F2 24 Tf
+0.00 0.00 0.00 rg
+110.00 755.89 Td
+( ) Tj
+ET
+BT
+/F2 24 Tf
+0.00 0.00 0.00 rg
+122.00 755.89 Td
+(Support) Tj
+ET
+BT
+/F2 24 Tf
+0.00 0.00 0.00 rg
+206.00 755.89 Td
+( ) Tj
+ET
+BT
+/F2 24 Tf
+0.00 0.00 0.00 rg
+218.00 755.89 Td
+(Test) Tj
+ET
+0.5 w
+0 0 0 RG
+50.00 731.49 165.09 19.40 re S
+BT
+/F2 12 Tf
+0.00 0.00 0.00 rg
+55.00 736.49 Td
+(Name) Tj
+ET
+0.5 w
+0 0 0 RG
+215.09 731.49 165.09 19.40 re S
+BT
+/F2 12 Tf
+0.00 0.00 0.00 rg
+220.09 736.49 Td
+(Description) Tj
+ET
+0.5 w
+0 0 0 RG
+380.19 731.49 165.09 19.40 re S
+BT
+/F2 12 Tf
+0.00 0.00 0.00 rg
+385.19 736.49 Td
+(Status) Tj
+ET
+0.5 w
+0 0 0 RG
+50.00 697.69 165.09 33.80 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+55.00 717.09 Td
+(Item) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+79.00 717.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+85.00 717.09 Td
+(1) Tj
+ET
+0.5 w
+0 0 0 RG
+215.09 697.69 165.09 33.80 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.09 717.09 Td
+(This) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+244.09 717.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+250.09 717.09 Td
+(is) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+262.09 717.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+268.09 717.09 Td
+(a) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+274.09 717.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+280.09 717.09 Td
+(short) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+310.09 717.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.09 702.69 Td
+(description.) Tj
+ET
+0.5 w
+0 0 0 RG
+380.19 697.69 165.09 33.80 re S
+BT
+/F1 12 Tf
+0.00 0.67 0.00 rg
+385.19 717.09 Td
+(Success) Tj
+ET
+0.5 w
+0 0 0 RG
+50.00 577.49 165.09 120.20 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+55.00 683.29 Td
+(Item) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+79.00 683.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+85.00 683.29 Td
+(2) Tj
+ET
+0.5 w
+0 0 0 RG
+215.09 577.49 165.09 120.20 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.09 683.29 Td
+(This) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+244.09 683.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+250.09 683.29 Td
+(is) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+262.09 683.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+268.09 683.29 Td
+(a) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+274.09 683.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+280.09 683.29 Td
+(much) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+304.09 683.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+310.09 683.29 Td
+(longer) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+346.09 683.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.09 668.89 Td
+(description) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+286.09 668.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+292.09 668.89 Td
+(that) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+316.09 668.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+322.09 668.89 Td
+(should) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+358.09 668.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.09 654.49 Td
+(wrap) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+244.09 654.49 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+250.09 654.49 Td
+(within) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+286.09 654.49 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+292.09 654.49 Td
+(the) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+310.09 654.49 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+316.09 654.49 Td
+(table) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+346.09 654.49 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.09 640.09 Td
+(cell) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+244.09 640.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+250.09 640.09 Td
+(if) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+262.09 640.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+268.09 640.09 Td
+(our) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+286.09 640.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+292.09 640.09 Td
+(logic) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+322.09 640.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+328.09 640.09 Td
+(is) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+340.09 640.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.09 625.69 Td
+(working) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+262.09 625.69 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+268.09 625.69 Td
+(correctly.) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+328.09 625.69 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+334.09 625.69 Td
+(It) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+346.09 625.69 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.09 611.29 Td
+(needs) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+250.09 611.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+256.09 611.29 Td
+(to) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+268.09 611.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+274.09 611.29 Td
+(be) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+286.09 611.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+292.09 611.29 Td
+(long) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+316.09 611.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+322.09 611.29 Td
+(enough) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+358.09 611.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.09 596.89 Td
+(to) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+232.09 596.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+238.09 596.89 Td
+(exceed) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+274.09 596.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+280.09 596.89 Td
+(the) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+298.09 596.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+304.09 596.89 Td
+(column) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+340.09 596.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.09 582.49 Td
+(width.) Tj
+ET
+1.00 0.93 0.93 rg
+380.19 577.49 165.09 120.20 re f
+0.5 w
+0 0 0 RG
+380.19 577.49 165.09 120.20 re S
+q
+1.00 0.93 0.93 rg
+1.00 0.93 0.93 rg
+385.19 680.89 30.00 14.40 re f
+BT
+/F1 12 Tf
+1.00 0.00 0.00 rg
+385.19 683.29 Td
+(Error) Tj
+ET
+Q
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+50.00 559.49 Td
+(Text) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+74.00 559.49 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+80.00 559.49 Td
+(after) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+110.00 559.49 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+116.00 559.49 Td
+(the) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+134.00 559.49 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+140.00 559.49 Td
+(table.) Tj
+ET
+
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique >>
+endobj
+8 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >>
+endobj
+xref
+0 9
+0000000000 65535 f
+0000000015 00000 n
+0000000064 00000 n
+0000000121 00000 n
+0000000283 00000 n
+0000006330 00000 n
+0000006400 00000 n
+0000006475 00000 n
+0000006553 00000 n
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+6635
+%%EOF

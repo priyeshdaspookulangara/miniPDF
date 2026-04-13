@@ -135,6 +135,10 @@ class MiniPDF
 
             $tagName = strtolower($node->nodeName);
 
+            if ($tagName === 'table') {
+                return $this->renderTable($node, $currentStyles);
+            }
+
             if ($tagName === 'h1') {
                 $currentStyles['font-size'] = $styles['font-size'] ?? '24';
                 $currentStyles['font-weight'] = $styles['font-weight'] ?? 'bold';
@@ -153,8 +157,14 @@ class MiniPDF
             } elseif ($tagName === 'br') {
                 $fontSize = (float)($currentStyles['font-size'] ?? 12);
                 $this->currentY -= $fontSize * 1.2;
-                $this->currentX = $this->margin + ($currentStyles['indent'] ?? 0);
+                $this->currentX = ($currentStyles['startX'] ?? $this->margin) + ($currentStyles['indent'] ?? 0);
                 return "";
+            } elseif ($tagName === 'td' || $tagName === 'th') {
+                $pdfContent = "";
+                foreach ($node->childNodes as $child) {
+                    $pdfContent .= $this->renderNode($child, $currentStyles);
+                }
+                return $pdfContent;
             }
 
             $isBlock = in_array($tagName, ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li']);
@@ -201,6 +211,93 @@ class MiniPDF
         }
 
         return "";
+    }
+
+    private function renderTable(DOMElement $table, array $styles): string
+    {
+        $rows = [];
+        foreach ($table->childNodes as $child) {
+            if ($child instanceof DOMElement && strtolower($child->nodeName) === 'tr') {
+                $rows[] = $child;
+            }
+        }
+
+        if (empty($rows)) return "";
+
+        $maxCols = 0;
+        foreach ($rows as $row) {
+            $cells = 0;
+            foreach ($row->childNodes as $child) {
+                if ($child instanceof DOMElement && in_array(strtolower($child->nodeName), ['td', 'th'])) {
+                    $cells++;
+                }
+            }
+            $maxCols = max($maxCols, $cells);
+        }
+
+        if ($maxCols === 0) return "";
+
+        $colWidth = ($this->pageWidth - 2 * $this->margin) / $maxCols;
+        $pdfContent = "";
+
+        foreach ($rows as $row) {
+            $startY = $this->currentY;
+            $rowMaxY = $startY;
+            $currentCellIdx = 0;
+            $cellOperators = [];
+
+            foreach ($row->childNodes as $child) {
+                if ($child instanceof DOMElement && in_array(strtolower($child->nodeName), ['td', 'th'])) {
+                    $cellTagName = strtolower($child->nodeName);
+                    $cellStyles = array_merge($styles, $this->parseInlineStyles($child->getAttribute('style')));
+                    if ($cellTagName === 'th') {
+                        $cellStyles['font-weight'] = 'bold';
+                        $cellStyles['text-align'] = $cellStyles['text-align'] ?? 'center';
+                    }
+
+                    $cellStyles['startX'] = $this->margin + ($currentCellIdx * $colWidth);
+                    $cellStyles['maxWidth'] = $colWidth;
+
+                    $this->currentX = $cellStyles['startX'] + 5; // Internal padding
+                    $this->currentY = $startY - (float)($cellStyles['font-size'] ?? 12) * 1.2;
+
+                    $cellOperators[$currentCellIdx] = $this->renderNode($child, $cellStyles);
+                    $rowMaxY = min($rowMaxY, $this->currentY);
+                    $currentCellIdx++;
+                }
+            }
+
+            // Finalize row height and draw borders
+            $rowHeight = $startY - $rowMaxY + 5;
+            $currentCellIdx = 0;
+            foreach ($row->childNodes as $child) {
+                if ($child instanceof DOMElement && in_array(strtolower($child->nodeName), ['td', 'th'])) {
+                    $x = $this->margin + ($currentCellIdx * $colWidth);
+                    $cellStyles = array_merge($styles, $this->parseInlineStyles($child->getAttribute('style')));
+
+                    // Cell background
+                    if (isset($cellStyles['background-color'])) {
+                        $bgColor = $this->parseHexColor($cellStyles['background-color']);
+                        $pdfContent .= sprintf("%.2f %.2f %.2f rg\n", $bgColor[0]/255, $bgColor[1]/255, $bgColor[2]/255);
+                        $pdfContent .= sprintf("%.2f %.2f %.2f %.2f re f\n", $x, $rowMaxY - 5, $colWidth, $rowHeight);
+                    }
+
+                    // Border
+                    $pdfContent .= sprintf("0.5 w\n0 0 0 RG\n");
+                    $pdfContent .= sprintf("%.2f %.2f %.2f %.2f re S\n", $x, $rowMaxY - 5, $colWidth, $rowHeight);
+
+                    if (isset($cellOperators[$currentCellIdx])) {
+                        $pdfContent .= $cellOperators[$currentCellIdx];
+                    }
+                    $currentCellIdx++;
+                }
+            }
+
+            $this->currentY = $rowMaxY - 5;
+            $this->currentX = $this->margin;
+        }
+
+        return $pdfContent;
     }
 
     private function calculateTotalInlineWidth(DOMNode $node, array $parentStyles): float
@@ -256,6 +353,10 @@ class MiniPDF
             $out .= sprintf("q\n%.2f %.2f %.2f rg\n", $br, $bg, $bb);
         }
 
+        $startX = $styles['startX'] ?? $this->margin;
+        $maxWidth = $styles['maxWidth'] ?? ($this->pageWidth - 2 * $this->margin);
+        $rightBoundary = $startX + $maxWidth;
+
         $words = preg_split('/(\s+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         foreach ($words as $word) {
@@ -263,20 +364,22 @@ class MiniPDF
 
             $wordWidth = strlen($word) * $fontSize * 0.5;
 
-            if ($this->currentX + $wordWidth > $this->pageWidth - $this->margin && !ctype_space($word)) {
+            if ($this->currentX + $wordWidth > $rightBoundary - 5 && !ctype_space($word)) {
                 $this->currentY -= $fontSize * 1.2;
-                $this->currentX = $this->margin;
-                if (isset($styles['indent'])) {
-                    $this->currentX += $styles['indent'];
-                }
+                $this->currentX = $startX + ($styles['indent'] ?? 0);
+                if ($styles['startX'] ?? false) $this->currentX += 5; // Cell padding
             }
 
             // Skip leading whitespace on new lines
-            if (ctype_space($word) && $this->currentX === $this->margin + ($styles['indent'] ?? 0)) {
+            $indent = $styles['indent'] ?? 0;
+            $baseX = $startX + $indent;
+            if ($styles['startX'] ?? false) $baseX += 5; // Cell padding
+
+            if (ctype_space($word) && $this->currentX <= $baseX) {
                 continue;
             }
 
-            if (!ctype_space($word) || $this->currentX > ($this->margin + ($styles['indent'] ?? 0))) {
+            if (!ctype_space($word) || $this->currentX > $baseX) {
                 if (isset($styles['background-color'])) {
                     $bgColor = $this->parseHexColor($styles['background-color']);
                     $out .= sprintf("%.2f %.2f %.2f rg\n", $bgColor[0]/255, $bgColor[1]/255, $bgColor[2]/255);
