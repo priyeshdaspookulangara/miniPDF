@@ -7,22 +7,64 @@ endobj
 << /Type /Pages /Kids [3 0 R] /Count 1 >>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /MediaBox [0 0 595.28 841.89] /Contents 4 0 R >>
+<< /Type /Page /Parent 2 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R /F3 7 0 R /F4 8 0 R >> >> /MediaBox [0 0 595.28 841.89] /Contents 4 0 R >>
 endobj
 4 0 obj
-<< /Length 610 >>
+<< /Length 3115 >>
 stream
 BT
 /F2 24 Tf
 1.00 0.00 0.00 rg
 219.64 755.89 Td
-(Hello MiniPDF) Tj
+(Hello) Tj
+ET
+BT
+/F2 24 Tf
+1.00 0.00 0.00 rg
+279.64 755.89 Td
+( ) Tj
+ET
+BT
+/F2 24 Tf
+1.00 0.00 0.00 rg
+291.64 755.89 Td
+(MiniPDF) Tj
 ET
 BT
 /F1 14 Tf
 0.00 0.00 0.00 rg
 50.00 729.89 Td
-(This is a ) Tj
+(This) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+78.00 729.89 Td
+( ) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+85.00 729.89 Td
+(is) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+99.00 729.89 Td
+( ) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+106.00 729.89 Td
+(a) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+113.00 729.89 Td
+( ) Tj
 ET
 BT
 /F2 14 Tf
@@ -34,13 +76,139 @@ BT
 /F1 14 Tf
 0.00 0.00 0.00 rg
 155.00 729.89 Td
-( PDF generator written in 100% PHP.) Tj
+( ) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+162.00 729.89 Td
+(PDF) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+183.00 729.89 Td
+( ) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+190.00 729.89 Td
+(generator) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+253.00 729.89 Td
+( ) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+260.00 729.89 Td
+(written) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+309.00 729.89 Td
+( ) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+316.00 729.89 Td
+(in) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+330.00 729.89 Td
+( ) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+337.00 729.89 Td
+(100%) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+365.00 729.89 Td
+( ) Tj
+ET
+BT
+/F1 14 Tf
+0.00 0.00 0.00 rg
+372.00 729.89 Td
+(PHP.) Tj
 ET
 BT
 /F1 12 Tf
 0.00 0.00 1.00 rg
 212.28 706.89 Td
-( Support for inline styles like ) Tj
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+218.28 706.89 Td
+(Support) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+260.28 706.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+266.28 706.89 Td
+(for) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+284.28 706.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+290.28 706.89 Td
+(inline) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+326.28 706.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+332.28 706.89 Td
+(styles) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+368.28 706.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+374.28 706.89 Td
+(like) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+398.28 706.89 Td
+( ) Tj
 ET
 BT
 /F1 18 Tf
@@ -52,13 +220,109 @@ BT
 /F1 12 Tf
 0.00 0.00 1.00 rg
 449.28 706.89 Td
-( and font-size. ) Tj
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+455.28 706.89 Td
+(and) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+473.28 706.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+479.28 706.89 Td
+(font-size.) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 1.00 rg
+539.28 706.89 Td
+( ) Tj
 ET
 BT
 /F1 12 Tf
 0.00 0.00 0.00 rg
 50.00 683.89 Td
-(Coordinate mapping maps HTML to A4 page.) Tj
+(Coordinate) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+110.00 683.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+116.00 683.89 Td
+(mapping) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+158.00 683.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+164.00 683.89 Td
+(maps) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+188.00 683.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+194.00 683.89 Td
+(HTML) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+218.00 683.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+224.00 683.89 Td
+(to) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+236.00 683.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+242.00 683.89 Td
+(A4) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+254.00 683.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+260.00 683.89 Td
+(page.) Tj
 ET
 
 endstream
@@ -69,17 +333,25 @@ endobj
 6 0 obj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
 endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique >>
+endobj
+8 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >>
+endobj
 xref
-0 7
+0 9
 0000000000 65535 f
 0000000015 00000 n
 0000000064 00000 n
 0000000121 00000 n
-0000000263 00000 n
-0000000924 00000 n
-0000000994 00000 n
+0000000283 00000 n
+0000003450 00000 n
+0000003520 00000 n
+0000003595 00000 n
+0000003673 00000 n
 trailer
-<< /Size 7 /Root 1 0 R >>
+<< /Size 9 /Root 1 0 R >>
 startxref
-1069
+3755
 %%EOF

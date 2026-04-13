@@ -37,6 +37,8 @@ class MiniPDF
         $contentsId = $this->reserveObjectId();
         $fontRegularId = $this->reserveObjectId();
         $fontBoldId = $this->reserveObjectId();
+        $fontItalicId = $this->reserveObjectId();
+        $fontBoldItalicId = $this->reserveObjectId();
 
         $this->currentY = $this->pageHeight - $this->margin;
         $this->currentX = $this->margin;
@@ -45,10 +47,12 @@ class MiniPDF
 
         $this->addObject($catalogId, "<< /Type /Catalog /Pages $pagesId 0 R >>");
         $this->addObject($pagesId, "<< /Type /Pages /Kids [$pageId 0 R] /Count 1 >>");
-        $this->addObject($pageId, "<< /Type /Page /Parent $pagesId 0 R /Resources << /Font << /F1 $fontRegularId 0 R /F2 $fontBoldId 0 R >> >> /MediaBox [0 0 $this->pageWidth $this->pageHeight] /Contents $contentsId 0 R >>");
+        $this->addObject($pageId, "<< /Type /Page /Parent $pagesId 0 R /Resources << /Font << /F1 $fontRegularId 0 R /F2 $fontBoldId 0 R /F3 $fontItalicId 0 R /F4 $fontBoldItalicId 0 R >> >> /MediaBox [0 0 $this->pageWidth $this->pageHeight] /Contents $contentsId 0 R >>");
         $this->addObject($contentsId, "<< /Length " . strlen($stream) . " >>\nstream\n" . $stream . "\nendstream");
         $this->addObject($fontRegularId, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
         $this->addObject($fontBoldId, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
+        $this->addObject($fontItalicId, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique >>");
+        $this->addObject($fontBoldItalicId, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >>");
 
         return $this->assemblePdf();
     }
@@ -142,15 +146,32 @@ class MiniPDF
                 $currentStyles['font-weight'] = $styles['font-weight'] ?? 'bold';
             } elseif ($tagName === 'b' || $tagName === 'strong') {
                 $currentStyles['font-weight'] = 'bold';
+            } elseif ($tagName === 'i' || $tagName === 'em') {
+                $currentStyles['font-style'] = 'italic';
+            } elseif ($tagName === 'u') {
+                $currentStyles['text-decoration'] = 'underline';
+            } elseif ($tagName === 'br') {
+                $fontSize = (float)($currentStyles['font-size'] ?? 12);
+                $this->currentY -= $fontSize * 1.2;
+                $this->currentX = $this->margin + ($currentStyles['indent'] ?? 0);
+                return "";
             }
 
-            $isBlock = in_array($tagName, ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+            $isBlock = in_array($tagName, ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li']);
 
             $pdfContent = "";
             if ($isBlock) {
                 $fontSize = (float)($currentStyles['font-size'] ?? 12);
                 $this->currentY -= $fontSize * 1.5;
                 $this->currentX = $this->margin;
+
+
+                if ($tagName === 'li') {
+                    $this->currentX += 15;
+                    $currentStyles['indent'] = 15;
+                    $bulletColor = $this->parseHexColor($currentStyles['color'] ?? '#000000');
+                    $pdfContent .= $this->drawTextLine("•", "/F1", $fontSize, $bulletColor[0]/255, $bulletColor[1]/255, $bulletColor[2]/255, "none");
+                }
 
                 $textAlign = $currentStyles['text-align'] ?? 'left';
                 if ($textAlign !== 'left') {
@@ -170,6 +191,10 @@ class MiniPDF
             if ($isBlock) {
                 $this->currentX = $this->margin;
                 $this->currentY -= 5; // Extra spacing after block
+
+                if (isset($currentStyles['margin-bottom'])) {
+                    $this->currentY -= (float)$currentStyles['margin-bottom'];
+                }
             }
 
             return $pdfContent;
@@ -204,15 +229,73 @@ class MiniPDF
         $fontSize = (float)($styles['font-size'] ?? 12);
         $colorHex = $styles['color'] ?? '#000000';
         $fontWeight = $styles['font-weight'] ?? 'normal';
+        $fontStyle = $styles['font-style'] ?? 'normal';
+        $textDecoration = $styles['text-decoration'] ?? 'none';
 
         $color = $this->parseHexColor($colorHex);
         $r = $color[0] / 255;
         $g = $color[1] / 255;
         $b = $color[2] / 255;
 
-        $fontKey = ($fontWeight === 'bold') ? '/F2' : '/F1';
-        $escapedText = str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $text);
+        $fontKey = '/F1';
+        if ($fontWeight === 'bold' && $fontStyle === 'italic') {
+            $fontKey = '/F4';
+        } elseif ($fontWeight === 'bold') {
+            $fontKey = '/F2';
+        } elseif ($fontStyle === 'italic') {
+            $fontKey = '/F3';
+        }
 
+        $out = "";
+
+        if (isset($styles['background-color'])) {
+            $bgColor = $this->parseHexColor($styles['background-color']);
+            $br = $bgColor[0] / 255;
+            $bg = $bgColor[1] / 255;
+            $bb = $bgColor[2] / 255;
+            $out .= sprintf("q\n%.2f %.2f %.2f rg\n", $br, $bg, $bb);
+        }
+
+        $words = preg_split('/(\s+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        foreach ($words as $word) {
+            if ($word === '') continue;
+
+            $wordWidth = strlen($word) * $fontSize * 0.5;
+
+            if ($this->currentX + $wordWidth > $this->pageWidth - $this->margin && !ctype_space($word)) {
+                $this->currentY -= $fontSize * 1.2;
+                $this->currentX = $this->margin;
+                if (isset($styles['indent'])) {
+                    $this->currentX += $styles['indent'];
+                }
+            }
+
+            // Skip leading whitespace on new lines
+            if (ctype_space($word) && $this->currentX === $this->margin + ($styles['indent'] ?? 0)) {
+                continue;
+            }
+
+            if (!ctype_space($word) || $this->currentX > ($this->margin + ($styles['indent'] ?? 0))) {
+                if (isset($styles['background-color'])) {
+                    $bgColor = $this->parseHexColor($styles['background-color']);
+                    $out .= sprintf("%.2f %.2f %.2f rg\n", $bgColor[0]/255, $bgColor[1]/255, $bgColor[2]/255);
+                    $out .= sprintf("%.2f %.2f %.2f %.2f re f\n", $this->currentX, $this->currentY - $fontSize * 0.2, $wordWidth, $fontSize * 1.2);
+                }
+                $out .= $this->drawTextLine($word, $fontKey, $fontSize, $r, $g, $b, $textDecoration);
+            }
+        }
+
+        if (isset($styles['background-color'])) {
+            $out .= "Q\n";
+        }
+
+        return $out;
+    }
+
+    private function drawTextLine(string $text, string $fontKey, float $fontSize, float $r, float $g, float $b, string $textDecoration): string
+    {
+        $escapedText = str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $text);
         $out = "BT\n";
         $out .= "$fontKey $fontSize Tf\n";
         $out .= sprintf("%.2f %.2f %.2f rg\n", $r, $g, $b);
@@ -220,7 +303,17 @@ class MiniPDF
         $out .= "($escapedText) Tj\n";
         $out .= "ET\n";
 
-        $this->currentX += strlen($text) * $fontSize * 0.5;
+        $textWidth = strlen($text) * $fontSize * 0.5;
+
+        if ($textDecoration === 'underline' && !ctype_space($text)) {
+            $out .= sprintf("%.2f %.2f %.2f RG\n", $r, $g, $b);
+            $out .= sprintf("%.2f w\n", $fontSize * 0.05);
+            $out .= sprintf("%.2f %.2f m\n", $this->currentX, $this->currentY - 1);
+            $out .= sprintf("%.2f %.2f l\n", $this->currentX + $textWidth, $this->currentY - 1);
+            $out .= "S\n";
+        }
+
+        $this->currentX += $textWidth;
 
         return $out;
     }
