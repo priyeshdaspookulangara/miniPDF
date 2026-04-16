@@ -130,6 +130,7 @@ The library includes the standard Helvetica font family:
 ## Running Examples
 
 Explore the `examples/` directory for more implementation ideas:
+- `examples/generate_sample.php`: A comprehensive showcase document (**sample.pdf**).
 - `examples/test.php`: Simple basic example.
 - `examples/test_table.php`: Detailed table layout.
 - `examples/test_html_css.php`: Comprehensive styling showcase.
