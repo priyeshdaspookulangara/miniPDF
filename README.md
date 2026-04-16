@@ -133,3 +133,4 @@ Explore the `examples/` directory for more implementation ideas:
 - `examples/test.php`: Simple basic example.
 - `examples/test_table.php`: Detailed table layout.
 - `examples/test_html_css.php`: Comprehensive styling showcase.
+- `examples/generate_customers.php`: Practical example generating a customer list from an array.

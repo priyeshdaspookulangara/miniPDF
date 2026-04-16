@@ -1,0 +1,381 @@
+%PDF-1.7
+%\xe2\xe3\xcf\xd3
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R /F3 7 0 R /F4 8 0 R >> >> /MediaBox [0 0 595.28 841.89] /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 3866 >>
+stream
+BT
+/F2 24 Tf
+0.20 0.20 0.20 rg
+219.64 755.89 Td
+(Customer) Tj
+ET
+BT
+/F2 24 Tf
+0.20 0.20 0.20 rg
+315.64 755.89 Td
+( ) Tj
+ET
+BT
+/F2 24 Tf
+0.20 0.20 0.20 rg
+327.64 755.89 Td
+(List) Tj
+ET
+0.5 w
+0 0 0 RG
+50.00 731.49 123.82 19.40 re S
+BT
+/F2 12 Tf
+0.00 0.00 0.00 rg
+55.00 736.49 Td
+(ID) Tj
+ET
+0.5 w
+0 0 0 RG
+173.82 731.49 123.82 19.40 re S
+BT
+/F2 12 Tf
+0.00 0.00 0.00 rg
+178.82 736.49 Td
+(Name) Tj
+ET
+0.5 w
+0 0 0 RG
+297.64 731.49 123.82 19.40 re S
+BT
+/F2 12 Tf
+0.00 0.00 0.00 rg
+302.64 736.49 Td
+(Email) Tj
+ET
+0.5 w
+0 0 0 RG
+421.46 731.49 123.82 19.40 re S
+BT
+/F2 12 Tf
+0.00 0.00 0.00 rg
+426.46 736.49 Td
+(Status) Tj
+ET
+0.5 w
+0 0 0 RG
+50.00 712.09 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+55.00 717.09 Td
+(1) Tj
+ET
+0.5 w
+0 0 0 RG
+173.82 712.09 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+178.82 717.09 Td
+(John) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+202.82 717.09 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+208.82 717.09 Td
+(Doe) Tj
+ET
+0.5 w
+0 0 0 RG
+297.64 712.09 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+302.64 717.09 Td
+(john@example.com) Tj
+ET
+0.5 w
+0 0 0 RG
+421.46 712.09 123.82 19.40 re S
+BT
+/F2 12 Tf
+0.00 0.67 0.00 rg
+426.46 717.09 Td
+(Active) Tj
+ET
+0.5 w
+0 0 0 RG
+50.00 692.69 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+55.00 697.69 Td
+(2) Tj
+ET
+0.5 w
+0 0 0 RG
+173.82 692.69 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+178.82 697.69 Td
+(Jane) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+202.82 697.69 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+208.82 697.69 Td
+(Smith) Tj
+ET
+0.5 w
+0 0 0 RG
+297.64 692.69 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+302.64 697.69 Td
+(jane@example.com) Tj
+ET
+0.5 w
+0 0 0 RG
+421.46 692.69 123.82 19.40 re S
+BT
+/F2 12 Tf
+1.00 0.00 0.00 rg
+426.46 697.69 Td
+(Inactive) Tj
+ET
+0.5 w
+0 0 0 RG
+50.00 673.29 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+55.00 678.29 Td
+(3) Tj
+ET
+0.5 w
+0 0 0 RG
+173.82 673.29 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+178.82 678.29 Td
+(Robert) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+214.82 678.29 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.82 678.29 Td
+(Johnson) Tj
+ET
+0.5 w
+0 0 0 RG
+297.64 673.29 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+302.64 678.29 Td
+(robert@example.com) Tj
+ET
+0.5 w
+0 0 0 RG
+421.46 673.29 123.82 19.40 re S
+BT
+/F2 12 Tf
+0.00 0.67 0.00 rg
+426.46 678.29 Td
+(Active) Tj
+ET
+0.5 w
+0 0 0 RG
+50.00 653.89 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+55.00 658.89 Td
+(4) Tj
+ET
+0.5 w
+0 0 0 RG
+173.82 653.89 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+178.82 658.89 Td
+(Emily) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+208.82 658.89 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+214.82 658.89 Td
+(Davis) Tj
+ET
+0.5 w
+0 0 0 RG
+297.64 653.89 123.82 19.40 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+302.64 658.89 Td
+(emily@example.com) Tj
+ET
+0.5 w
+0 0 0 RG
+421.46 653.89 123.82 19.40 re S
+BT
+/F2 12 Tf
+0.00 0.67 0.00 rg
+426.46 658.89 Td
+(Active) Tj
+ET
+0.5 w
+0 0 0 RG
+50.00 620.09 123.82 33.80 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+55.00 639.49 Td
+(5) Tj
+ET
+0.5 w
+0 0 0 RG
+173.82 620.09 123.82 33.80 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+178.82 639.49 Td
+(Michael) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+220.82 639.49 Td
+( ) Tj
+ET
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+226.82 639.49 Td
+(Brown) Tj
+ET
+0.5 w
+0 0 0 RG
+297.64 620.09 123.82 33.80 re S
+BT
+/F1 12 Tf
+0.00 0.00 0.00 rg
+302.64 625.09 Td
+(michael@example.com) Tj
+ET
+0.5 w
+0 0 0 RG
+421.46 620.09 123.82 33.80 re S
+BT
+/F2 12 Tf
+0.53 0.53 0.53 rg
+426.46 639.49 Td
+(Pending) Tj
+ET
+BT
+/F1 10 Tf
+0.00 0.00 0.00 rg
+380.28 605.09 Td
+(Generated) Tj
+ET
+BT
+/F1 10 Tf
+0.00 0.00 0.00 rg
+425.28 605.09 Td
+( ) Tj
+ET
+BT
+/F1 10 Tf
+0.00 0.00 0.00 rg
+430.28 605.09 Td
+(on:) Tj
+ET
+BT
+/F1 10 Tf
+0.00 0.00 0.00 rg
+445.28 605.09 Td
+( ) Tj
+ET
+BT
+/F1 10 Tf
+0.00 0.00 0.00 rg
+450.28 605.09 Td
+(2026-04-16) Tj
+ET
+BT
+/F1 10 Tf
+0.00 0.00 0.00 rg
+500.28 605.09 Td
+( ) Tj
+ET
+BT
+/F1 10 Tf
+0.00 0.00 0.00 rg
+50.00 593.09 Td
+(07:07:38) Tj
+ET
+
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique >>
+endobj
+8 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-BoldOblique >>
+endobj
+xref
+0 9
+0000000000 65535 f
+0000000015 00000 n
+0000000064 00000 n
+0000000121 00000 n
+0000000283 00000 n
+0000004201 00000 n
+0000004271 00000 n
+0000004346 00000 n
+0000004424 00000 n
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+4506
+%%EOF
