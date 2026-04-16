@@ -26,5 +26,5 @@ $html = '
 $minipdf = new MiniPDF($html);
 $pdfBinary = $minipdf->render();
 
-file_put_contents(__DIR__ . '/test_html_css.pdf', $pdfBinary);
-echo "PDF generated at examples/test_html_css.pdf\n";
+file_put_contents(__DIR__ . '/output_html_css.pdf', $pdfBinary);
+echo "PDF generated at examples/output_html_css.pdf\n";

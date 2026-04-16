@@ -29,5 +29,5 @@ $html = '
 $minipdf = new MiniPDF($html);
 $pdfBinary = $minipdf->render();
 
-file_put_contents(__DIR__ . '/test_table.pdf', $pdfBinary);
-echo "PDF generated at examples/test_table.pdf\n";
+file_put_contents(__DIR__ . '/output_table.pdf', $pdfBinary);
+echo "PDF generated at examples/output_table.pdf\n";
