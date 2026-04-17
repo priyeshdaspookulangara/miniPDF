@@ -7,6 +7,7 @@ MiniPDF is a lightweight, dependency-free PHP 8.x library for converting HTML an
 - **Zero Dependencies**: Pure PHP implementation without requiring external libraries like wkhtmltopdf or extensions like imagick.
 - **HTML5 Parsing**: Uses native `DOMDocument` for robust HTML parsing.
 - **Table Support**: Automatic column width and row height calculation, with support for borders and backgrounds.
+- **Image Support**: Support for PNG (via data URIs) and SVG (inline or base64 data URIs).
 - **CSS Styling**: Support for common inline styles including colors, fonts, alignment, and backgrounds.
 - **Word Wrapping**: Intelligent line breaking engine that respects margins and container boundaries.
 - **Lightweight**: Minimal memory footprint.
@@ -107,6 +108,7 @@ $html = '
 - **Formatting**: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`
 - **Lists**: `<ul>`, `<li>`
 - **Tables**: `<table>`, `<tr>`, `<th>`, `<td>`
+- **Images**: `<img>` (supports `src` as base64 PNG/SVG or inline SVG)
 
 ### Supported CSS Properties (Inline Styles)
 

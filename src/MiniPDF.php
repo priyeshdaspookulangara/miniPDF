@@ -12,6 +12,7 @@ class MiniPDF
     private string $html;
     private array $objects = [];
     private array $offsets = [];
+    private array $images = [];
     private int $nextObjectId = 1;
 
     private float $pageWidth = 595.28;  // A4 Width at 72 DPI
@@ -42,12 +43,18 @@ class MiniPDF
 
         $this->currentY = $this->pageHeight - $this->margin;
         $this->currentX = $this->margin;
+        $this->images = [];
 
         $stream = $this->generateContentStream();
 
+        $xobjects = "";
+        foreach ($this->images as $name => $img) {
+            $xobjects .= "/$name {$img['id']} 0 R ";
+        }
+
         $this->addObject($catalogId, "<< /Type /Catalog /Pages $pagesId 0 R >>");
         $this->addObject($pagesId, "<< /Type /Pages /Kids [$pageId 0 R] /Count 1 >>");
-        $this->addObject($pageId, "<< /Type /Page /Parent $pagesId 0 R /Resources << /Font << /F1 $fontRegularId 0 R /F2 $fontBoldId 0 R /F3 $fontItalicId 0 R /F4 $fontBoldItalicId 0 R >> >> /MediaBox [0 0 $this->pageWidth $this->pageHeight] /Contents $contentsId 0 R >>");
+        $this->addObject($pageId, "<< /Type /Page /Parent $pagesId 0 R /Resources << /Font << /F1 $fontRegularId 0 R /F2 $fontBoldId 0 R /F3 $fontItalicId 0 R /F4 $fontBoldItalicId 0 R >> /XObject << $xobjects >> >> /MediaBox [0 0 $this->pageWidth $this->pageHeight] /Contents $contentsId 0 R >>");
         $this->addObject($contentsId, "<< /Length " . strlen($stream) . " >>\nstream\n" . $stream . "\nendstream");
         $this->addObject($fontRegularId, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
         $this->addObject($fontBoldId, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
@@ -165,6 +172,31 @@ class MiniPDF
                     $pdfContent .= $this->renderNode($child, $currentStyles);
                 }
                 return $pdfContent;
+            } elseif ($tagName === 'img') {
+                $src = $node->getAttribute('src');
+                $width = (float)($styles['width'] ?? $node->getAttribute('width') ?: 100);
+                $height = (float)($styles['height'] ?? $node->getAttribute('height') ?: 100);
+
+                if (str_starts_with($src, 'data:image/png;base64,')) {
+                    $data = base64_decode(substr($src, 22));
+                    $img = $this->processPng($data);
+                    if ($img) {
+                        $this->images[$img['name']] = $img;
+                        $out = sprintf("q\n%.2f 0 0 %.2f %.2f %.2f cm\n/%s Do\nQ\n", $width, $height, $this->currentX, $this->currentY - $height, $img['name']);
+                        $this->currentX += $width;
+                        return $out;
+                    }
+                } elseif (str_starts_with($src, 'data:image/svg+xml;base64,')) {
+                    $data = base64_decode(substr($src, 26));
+                    $out = $this->processSvg($data, $width, $height);
+                    $this->currentX += $width;
+                    return $out;
+                } elseif (str_starts_with($src, '<svg')) {
+                    $out = $this->processSvg($src, $width, $height);
+                    $this->currentX += $width;
+                    return $out;
+                }
+                return "";
             }
 
             $isBlock = in_array($tagName, ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li']);
@@ -448,6 +480,112 @@ class MiniPDF
             hexdec(substr($hex, 0, 2)),
             hexdec(substr($hex, 2, 2)),
             hexdec(substr($hex, 4, 2))
+        ];
+    }
+
+    private function processSvg(string $data, float $targetWidth = 100, float $targetHeight = 100): string
+    {
+        $dom = new DOMDocument();
+        if (!@$dom->loadXML($data)) return "";
+
+        $svg = $dom->getElementsByTagName('svg')->item(0);
+        if (!$svg) return "";
+
+        $viewBox = $svg->getAttribute('viewBox');
+        $vbWidth = (float)$svg->getAttribute('width') ?: 100;
+        $vbHeight = (float)$svg->getAttribute('height') ?: 100;
+
+        if ($viewBox) {
+            $parts = preg_split('/[\s,]+/', trim($viewBox));
+            if (count($parts) === 4) {
+                $vbWidth = (float)$parts[2];
+                $vbHeight = (float)$parts[3];
+            }
+        }
+
+        $scaleX = $targetWidth / ($vbWidth ?: 1);
+        $scaleY = $targetHeight / ($vbHeight ?: 1);
+
+        $out = "q\n";
+        $out .= sprintf("%.2f 0 0 %.2f %.2f %.2f cm\n", $scaleX, -$scaleY, $this->currentX, $this->currentY);
+
+        foreach ($svg->childNodes as $node) {
+            if ($node instanceof DOMElement) {
+                $tagName = strtolower($node->nodeName);
+                if ($tagName === 'rect') {
+                    $x = (float)$node->getAttribute('x');
+                    $y = (float)$node->getAttribute('y');
+                    $w = (float)$node->getAttribute('width');
+                    $h = (float)$node->getAttribute('height');
+                    $fill = $node->getAttribute('fill') ?: '#000000';
+                    $color = $this->parseHexColor($fill);
+                    $out .= sprintf("%.2f %.2f %.2f rg\n", $color[0]/255, $color[1]/255, $color[2]/255);
+                    $out .= sprintf("%.2f %.2f %.2f %.2f re f\n", $x, $y, $w, $h);
+                } elseif ($tagName === 'circle') {
+                    $cx = (float)$node->getAttribute('cx');
+                    $cy = (float)$node->getAttribute('cy');
+                    $r = (float)$node->getAttribute('r');
+                    $fill = $node->getAttribute('fill') ?: '#000000';
+                    $color = $this->parseHexColor($fill);
+                    $out .= sprintf("%.2f %.2f %.2f rg\n", $color[0]/255, $color[1]/255, $color[2]/255);
+                    // Approximate circle with 4 bezier curves
+                    $k = 0.552284749831 * $r;
+                    $out .= sprintf("%.2f %.2f m\n", $cx + $r, $cy);
+                    $out .= sprintf("%.2f %.2f %.2f %.2f %.2f %.2f c\n", $cx + $r, $cy + $k, $cx + $k, $cy + $r, $cx, $cy + $r);
+                    $out .= sprintf("%.2f %.2f %.2f %.2f %.2f %.2f c\n", $cx - $k, $cy + $r, $cx - $r, $cy + $k, $cx - $r, $cy);
+                    $out .= sprintf("%.2f %.2f %.2f %.2f %.2f %.2f c\n", $cx - $r, $cy - $k, $cx - $k, $cy - $r, $cx, $cy - $r);
+                    $out .= sprintf("%.2f %.2f %.2f %.2f %.2f %.2f c f\n", $cx + $k, $cy - $r, $cx + $r, $cy - $k, $cx + $r, $cy);
+                }
+            }
+        }
+
+        $out .= "Q\n";
+        return $out;
+    }
+
+    private function processPng(string $data): ?array
+    {
+        if (substr($data, 0, 8) !== "\x89PNG\r\n\x1a\n") return null;
+
+        $pos = 8;
+        $width = 0;
+        $height = 0;
+        $colorType = 0;
+        $idat = "";
+
+        while ($pos < strlen($data)) {
+            $len = unpack('N', substr($data, $pos, 4))[1];
+            $type = substr($data, $pos + 4, 4);
+            $pos += 8;
+
+            if ($type === 'IHDR') {
+                $width = unpack('N', substr($data, $pos, 4))[1];
+                $height = unpack('N', substr($data, $pos + 4, 4))[1];
+                $colorType = ord($data[$pos + 9]);
+            } elseif ($type === 'IDAT') {
+                $idat .= substr($data, $pos, $len);
+            } elseif ($type === 'IEND') {
+                break;
+            }
+
+            $pos += $len + 4; // Skip data + CRC
+        }
+
+        if ($width === 0 || $height === 0) return null;
+
+        $id = $this->reserveObjectId();
+        $name = "Img" . count($this->images);
+
+        $colorSpace = ($colorType === 2 || $colorType === 6) ? '/DeviceRGB' : '/DeviceGray';
+        $bpc = 8;
+
+        $this->addObject($id, "<< /Type /XObject /Subtype /Image /Width $width /Height $height /ColorSpace $colorSpace /BitsPerComponent $bpc /Filter /FlateDecode /Length " . strlen($idat) . " >>\nstream\n" . $idat . "\nendstream");
+
+        return [
+            'id' => $id,
+            'name' => $name,
+            'width' => (float)$width,
+            'height' => (float)$height
         ];
     }
 }
