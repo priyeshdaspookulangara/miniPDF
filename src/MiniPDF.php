@@ -17,6 +17,7 @@ class MiniPDF
     private float $pageWidth = 595.28;  // A4 Width at 72 DPI
     private float $pageHeight = 841.89; // A4 Height at 72 DPI
     private float $margin = 50.0;
+    private float $leftMargin = 50.0;
     private float $currentX;
     private float $currentY;
 
@@ -117,6 +118,111 @@ class MiniPDF
         return $content;
     }
 
+    private function renderTable(DOMElement $table, array $styles): string
+    {
+        $pdfContent = "";
+        $rows = [];
+        $maxCols = 0;
+
+        // Collect rows and find max columns
+        $searchNodes = [$table];
+        while (!empty($searchNodes)) {
+            $currentNode = array_shift($searchNodes);
+            foreach ($currentNode->childNodes as $child) {
+                if ($child instanceof DOMElement) {
+                    $tagName = strtolower($child->nodeName);
+                    if ($tagName === 'tr') {
+                        $rows[] = $child;
+                        $cols = 0;
+                        foreach ($child->childNodes as $td) {
+                            if ($td instanceof DOMElement && ($td->nodeName === 'td' || $td->nodeName === 'th')) {
+                                $cols++;
+                            }
+                        }
+                        $maxCols = max($maxCols, $cols);
+                    } elseif (in_array($tagName, ['thead', 'tbody', 'tfoot'])) {
+                        $searchNodes[] = $child;
+                    }
+                }
+            }
+        }
+
+        if ($maxCols === 0) return "";
+
+        $availableWidth = $this->pageWidth - $this->leftMargin - $this->margin;
+        $colWidth = $availableWidth / $maxCols;
+        $border = (int)$table->getAttribute('border');
+
+        $startX = $this->leftMargin;
+
+        foreach ($rows as $row) {
+            $cells = [];
+            foreach ($row->childNodes as $child) {
+                if ($child instanceof DOMElement && ($child->nodeName === 'td' || $child->nodeName === 'th')) {
+                    $cells[] = $child;
+                }
+            }
+
+            $currentX = $startX;
+            $rowY = $this->currentY;
+
+            // First pass: calculate row height based on font sizes in cells
+            $maxRowHeight = 0;
+            foreach ($cells as $cell) {
+                $cellStyles = array_merge($styles, $this->parseInlineStyles($cell->getAttribute('style')));
+                $fontSize = (float)($cellStyles['font-size'] ?? 12);
+                $maxRowHeight = max($maxRowHeight, $fontSize * 1.5);
+
+                // Check children for larger font sizes
+                foreach ($cell->childNodes as $child) {
+                    if ($child instanceof DOMElement) {
+                        $childStyles = array_merge($cellStyles, $this->parseInlineStyles($child->getAttribute('style')));
+                        $cTagName = strtolower($child->nodeName);
+                        if ($cTagName === 'h1') $childFontSize = $childStyles['font-size'] ?? 24;
+                        elseif ($cTagName === 'h2') $childFontSize = $childStyles['font-size'] ?? 20;
+                        elseif ($cTagName === 'h3') $childFontSize = $childStyles['font-size'] ?? 18;
+                        else $childFontSize = $childStyles['font-size'] ?? 12;
+                        $maxRowHeight = max($maxRowHeight, (float)$childFontSize * 1.5);
+                    }
+                }
+            }
+            $maxRowHeight += 4; // Padding
+
+            // Second pass: render cells
+            foreach ($cells as $index => $cell) {
+                $cellStyles = array_merge($styles, $this->parseInlineStyles($cell->getAttribute('style')));
+                if (strtolower($cell->nodeName) === 'th') {
+                    $cellStyles['font-weight'] = 'bold';
+                }
+
+                $this->currentX = $currentX;
+                $this->leftMargin = $currentX;
+
+                // Draw border if needed
+                if ($border > 0) {
+                    $pdfContent .= sprintf("q %.2f w %.2f %.2f %.2f %.2f re S Q\n",
+                        0.5, $currentX, $this->currentY - $maxRowHeight, $colWidth, $maxRowHeight);
+                }
+
+                // Render cell content - we offset Y slightly for padding
+                $originalY = $this->currentY;
+                $this->currentY -= 2; // Top padding
+
+                foreach ($cell->childNodes as $child) {
+                    $pdfContent .= $this->renderNode($child, $cellStyles);
+                }
+
+                $currentX += $colWidth;
+                $this->currentY = $originalY; // Reset Y for next cell in the same row
+            }
+
+            $this->currentY -= $maxRowHeight;
+            $this->leftMargin = $startX;
+        }
+
+        return $pdfContent;
+    }
+
     private function renderNode(DOMNode $node, array $parentStyles = []): string
     {
         if ($node instanceof DOMText) {
@@ -130,6 +236,10 @@ class MiniPDF
             $currentStyles = array_merge($parentStyles, $styles);
 
             $tagName = strtolower($node->nodeName);
+
+            if ($tagName === 'table') {
+                return $this->renderTable($node, $currentStyles);
+            }
 
             if ($tagName === 'h1') {
                 $currentStyles['font-size'] = $styles['font-size'] ?? '24';
@@ -150,7 +260,7 @@ class MiniPDF
             if ($isBlock) {
                 $fontSize = (float)($currentStyles['font-size'] ?? 12);
                 $this->currentY -= $fontSize * 1.5;
-                $this->currentX = $this->margin;
+                $this->currentX = $this->leftMargin;
 
                 $textAlign = $currentStyles['text-align'] ?? 'left';
                 if ($textAlign !== 'left') {
@@ -168,7 +278,7 @@ class MiniPDF
             }
 
             if ($isBlock) {
-                $this->currentX = $this->margin;
+                $this->currentX = $this->leftMargin;
                 $this->currentY -= 5; // Extra spacing after block
             }
 
