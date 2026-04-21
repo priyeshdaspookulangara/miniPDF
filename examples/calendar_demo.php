@@ -8,7 +8,7 @@ if (isset($_GET['download'])) {
     $month = date('m');
     $monthName = date('F Y');
 
-    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    $daysInMonth = date('t', strtotime("$year-$month-01"));
     $firstDayOfMonth = date('w', strtotime("$year-$month-01"));
     $today = date('j');
 
@@ -63,10 +63,60 @@ if (isset($_GET['download'])) {
 <html>
 <head>
     <title>Calendar Demo</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; line-height: 1.6; }
+        .demo-box { border: 1px solid #ccc; padding: 20px; border-radius: 8px; max-width: 600px; }
+        button { cursor: pointer; padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #0056b3; }
+        a.btn-link { text-decoration: none; display: inline-block; margin-right: 10px; }
+    </style>
 </head>
 <body>
-    <h1>MiniPDF Calendar Generator</h1>
-    <p>Click the link below to generate and download a PDF calendar of the current month.</p>
-    <a href="?download=1" target="_blank">Download Calendar</a>
+    <div class="demo-box">
+        <h1>MiniPDF Calendar Generator</h1>
+        <p>Choose a download method for the current month's calendar:</p>
+
+        <p>
+            <strong>Standard Link:</strong><br>
+            <a href="?download=1" target="_blank" class="btn-link">Download (New Tab)</a>
+        </p>
+
+        <p>
+            <strong>AJAX Method (No Page Refresh/Tab):</strong><br>
+            <button id="ajaxDownload">Download via AJAX</button>
+        </p>
+    </div>
+
+    <script>
+        document.getElementById('ajaxDownload').addEventListener('click', function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+
+            fetch('?download=1')
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'calendar_<?php echo date('m'); ?>.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    btn.disabled = false;
+                    btn.textContent = 'Download via AJAX';
+                })
+                .catch(error => {
+                    console.error('Download failed:', error);
+                    alert('Failed to download PDF.');
+                    btn.disabled = false;
+                    btn.textContent = 'Download via AJAX';
+                });
+        });
+    </script>
 </body>
 </html>
