@@ -67,6 +67,6 @@ if (isset($_GET['download'])) {
 <body>
     <h1>MiniPDF Calendar Generator</h1>
     <p>Click the link below to generate and download a PDF calendar of the current month.</p>
-    <a href="?download=1">Download Calendar</a>
+    <a href="?download=1" target="_blank">Download Calendar</a>
 </body>
 </html>
