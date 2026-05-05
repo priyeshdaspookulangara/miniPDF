@@ -18,6 +18,7 @@ class MiniPDF
     private float $pageHeight = 841.89; // A4 Height at 72 DPI
     private float $margin = 50.0;
     private float $leftMargin = 50.0;
+    private float $rightMargin = 50.0;
     private float $currentX;
     private float $currentY;
 
@@ -43,6 +44,8 @@ class MiniPDF
 
         $this->currentY = $this->pageHeight - $this->margin;
         $this->currentX = $this->margin;
+        $this->leftMargin = $this->margin;
+        $this->rightMargin = $this->margin;
 
         $stream = $this->generateContentStream();
 
@@ -153,9 +156,10 @@ class MiniPDF
 
         if ($maxCols === 0) return "";
 
-        $availableWidth = $this->pageWidth - $this->leftMargin - $this->margin;
+        $availableWidth = $this->pageWidth - $this->leftMargin - $this->rightMargin;
         $colWidth = $availableWidth / $maxCols;
         $border = (int)$table->getAttribute('border');
+        $cellPadding = (float)($table->getAttribute('cellpadding') ?: 2);
 
         $startX = $this->leftMargin;
 
@@ -168,29 +172,32 @@ class MiniPDF
             }
 
             $currentX = $startX;
-            $rowY = $this->currentY;
 
-            // First pass: calculate row height based on font sizes in cells
+            // First pass: calculate row height based on content
             $maxRowHeight = 0;
+            $rowHeightAttr = $row->getAttribute('height');
+            if ($rowHeightAttr) {
+                $maxRowHeight = (float)$rowHeightAttr;
+            }
+
             foreach ($cells as $cell) {
                 $cellStyles = array_merge($styles, $this->parseInlineStyles($cell->getAttribute('style')));
-                $fontSize = (float)($cellStyles['font-size'] ?? 12);
-                $maxRowHeight = max($maxRowHeight, $fontSize * 1.5);
 
-                // Check children for larger font sizes
+                // Calculate content height for this cell
+                $cellContentHeight = 0;
                 foreach ($cell->childNodes as $child) {
-                    if ($child instanceof DOMElement) {
-                        $childStyles = array_merge($cellStyles, $this->parseInlineStyles($child->getAttribute('style')));
-                        $cTagName = strtolower($child->nodeName);
-                        if ($cTagName === 'h1') $childFontSize = $childStyles['font-size'] ?? 24;
-                        elseif ($cTagName === 'h2') $childFontSize = $childStyles['font-size'] ?? 20;
-                        elseif ($cTagName === 'h3') $childFontSize = $childStyles['font-size'] ?? 18;
-                        else $childFontSize = $childStyles['font-size'] ?? 12;
-                        $maxRowHeight = max($maxRowHeight, (float)$childFontSize * 1.5);
-                    }
+                    $cellContentHeight += $this->calculateContentHeight($child, $colWidth - (2 * $cellPadding), $cellStyles);
                 }
+
+                $tdHeightAttr = $cell->getAttribute('height');
+                $minCellHeight = $tdHeightAttr ? (float)$tdHeightAttr : 0;
+
+                $maxRowHeight = max($maxRowHeight, $cellContentHeight + (2 * $cellPadding), $minCellHeight);
             }
-            $maxRowHeight += 4; // Padding
+
+            if ($maxRowHeight === 0) {
+                $maxRowHeight = 15; // Default minimum height
+            }
 
             // Second pass: render cells
             foreach ($cells as $index => $cell) {
@@ -201,6 +208,15 @@ class MiniPDF
 
                 $this->currentX = $currentX;
                 $this->leftMargin = $currentX;
+                $this->rightMargin = $this->pageWidth - ($currentX + $colWidth);
+
+                // Draw background if set
+                if (isset($cellStyles['background-color'])) {
+                    $bgColor = $this->parseHexColor($cellStyles['background-color']);
+                    $pdfContent .= sprintf("q %.2f %.2f %.2f rg %.2f %.2f %.2f %.2f re f Q\n",
+                        $bgColor[0]/255, $bgColor[1]/255, $bgColor[2]/255,
+                        $currentX, $this->currentY - $maxRowHeight, $colWidth, $maxRowHeight);
+                }
 
                 // Draw border if needed
                 if ($border > 0) {
@@ -210,7 +226,7 @@ class MiniPDF
 
                 // Render cell content - we offset Y slightly for padding
                 $originalY = $this->currentY;
-                $this->currentY -= 2; // Top padding
+                $this->currentY -= $cellPadding; // Top padding
 
                 foreach ($cell->childNodes as $child) {
                     $pdfContent .= $this->renderNode($child, $cellStyles);
@@ -222,9 +238,20 @@ class MiniPDF
 
             $this->currentY -= $maxRowHeight;
             $this->leftMargin = $startX;
+            $this->rightMargin = $this->margin;
         }
 
         return $pdfContent;
+    }
+
+    private function checkCollision(float $y, float $height, float $buffer = 0): float
+    {
+        // Primitive collision check: if the requested position is too low (high Y in PDF)
+        // given the currentY, offset it.
+        if ($y > $this->currentY) {
+            return $this->currentY - $buffer;
+        }
+        return $y;
     }
 
     private function renderNode(DOMNode $node, array $parentStyles = []): string
@@ -263,7 +290,7 @@ class MiniPDF
             } elseif ($tagName === 'br') {
                 $fontSize = (float)($currentStyles['font-size'] ?? 12);
                 $this->currentY -= $fontSize * 1.2;
-                $this->currentX = $this->margin + ($currentStyles['indent'] ?? 0);
+                $this->currentX = $this->leftMargin + ($currentStyles['indent'] ?? 0);
                 return "";
             }
 
@@ -272,9 +299,14 @@ class MiniPDF
             $pdfContent = "";
             if ($isBlock) {
                 $fontSize = (float)($currentStyles['font-size'] ?? 12);
-                $this->currentY -= $fontSize * 1.5;
-                $this->currentX = $this->leftMargin;
+                $this->currentY -= $fontSize * 0.5; // Half of font size as top margin
 
+                $paddingTop = 0;
+                if (isset($currentStyles['padding-top'])) $paddingTop = (float)$currentStyles['padding-top'];
+                elseif (isset($currentStyles['padding'])) $paddingTop = (float)$currentStyles['padding'];
+
+                $this->currentY -= $paddingTop;
+                $this->currentX = $this->leftMargin;
 
                 if ($tagName === 'li') {
                     $this->currentX += 15;
@@ -294,12 +326,37 @@ class MiniPDF
                 }
             }
 
+            $oldLeftMargin = $this->leftMargin;
+            $oldRightMargin = $this->rightMargin;
+
+            if ($isBlock) {
+                $paddingLeft = 0;
+                if (isset($currentStyles['padding-left'])) $paddingLeft = (float)$currentStyles['padding-left'];
+                elseif (isset($currentStyles['padding'])) $paddingLeft = (float)$currentStyles['padding'];
+
+                $paddingRight = 0;
+                if (isset($currentStyles['padding-right'])) $paddingRight = (float)$currentStyles['padding-right'];
+                elseif (isset($currentStyles['padding'])) $paddingRight = (float)$currentStyles['padding'];
+
+                $this->leftMargin += $paddingLeft;
+                $this->rightMargin += $paddingRight;
+                $this->currentX = $this->leftMargin;
+            }
+
             foreach ($node->childNodes as $child) {
                 $pdfContent .= $this->renderNode($child, $currentStyles);
             }
 
             if ($isBlock) {
-                $this->currentX = $this->leftMargin;
+                $paddingBottom = 0;
+                if (isset($currentStyles['padding-bottom'])) $paddingBottom = (float)$currentStyles['padding-bottom'];
+                elseif (isset($currentStyles['padding'])) $paddingBottom = (float)$currentStyles['padding'];
+
+                $this->currentY -= $paddingBottom;
+                $this->currentX = $oldLeftMargin;
+                $this->leftMargin = $oldLeftMargin;
+                $this->rightMargin = $oldRightMargin;
+
                 $this->currentY -= 5; // Extra spacing after block
 
                 if (isset($currentStyles['margin-bottom'])) {
@@ -320,7 +377,7 @@ class MiniPDF
             if ($child instanceof DOMText) {
                 $text = preg_replace('/\s+/', ' ', $child->textContent);
                 $fontSize = (float)($parentStyles['font-size'] ?? 12);
-                $width += strlen($text) * $fontSize * 0.5;
+                $width += $this->getTextWidth($text, $fontSize);
             } elseif ($child instanceof DOMElement) {
                 $tagName = strtolower($child->nodeName);
                 if (!in_array($tagName, ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
@@ -337,6 +394,7 @@ class MiniPDF
     private function appendText(string $text, array $styles): string
     {
         $fontSize = (float)($styles['font-size'] ?? 12);
+        $lineHeight = $fontSize * 1.2;
         $colorHex = $styles['color'] ?? '#000000';
         $fontWeight = $styles['font-weight'] ?? 'normal';
         $fontStyle = $styles['font-style'] ?? 'normal';
@@ -371,22 +429,22 @@ class MiniPDF
         foreach ($words as $word) {
             if ($word === '') continue;
 
-            $wordWidth = strlen($word) * $fontSize * 0.5;
+            $wordWidth = $this->getTextWidth($word, $fontSize);
 
-            if ($this->currentX + $wordWidth > $this->pageWidth - $this->margin && !ctype_space($word)) {
-                $this->currentY -= $fontSize * 1.2;
-                $this->currentX = $this->margin;
+            if ($this->currentX + $wordWidth > $this->pageWidth - $this->rightMargin && !ctype_space($word)) {
+                $this->currentY -= $lineHeight;
+                $this->currentX = $this->leftMargin;
                 if (isset($styles['indent'])) {
                     $this->currentX += $styles['indent'];
                 }
             }
 
             // Skip leading whitespace on new lines
-            if (ctype_space($word) && $this->currentX === $this->margin + ($styles['indent'] ?? 0)) {
+            if (ctype_space($word) && $this->currentX === $this->leftMargin + ($styles['indent'] ?? 0)) {
                 continue;
             }
 
-            if (!ctype_space($word) || $this->currentX > ($this->margin + ($styles['indent'] ?? 0))) {
+            if (!ctype_space($word) || $this->currentX > ($this->leftMargin + ($styles['indent'] ?? 0))) {
                 if (isset($styles['background-color'])) {
                     $bgColor = $this->parseHexColor($styles['background-color']);
                     $out .= sprintf("%.2f %.2f %.2f rg\n", $bgColor[0]/255, $bgColor[1]/255, $bgColor[2]/255);
@@ -413,7 +471,7 @@ class MiniPDF
         $out .= "($escapedText) Tj\n";
         $out .= "ET\n";
 
-        $textWidth = strlen($text) * $fontSize * 0.5;
+        $textWidth = $this->getTextWidth($text, $fontSize);
 
         if ($textDecoration === 'underline' && !ctype_space($text)) {
             $out .= sprintf("%.2f %.2f %.2f RG\n", $r, $g, $b);
@@ -456,5 +514,129 @@ class MiniPDF
             hexdec(substr($hex, 2, 2)),
             hexdec(substr($hex, 4, 2))
         ];
+    }
+
+    private function getTextWidth(string $text, float $fontSize): float
+    {
+        // Primitive width calculation: approx 0.5 of font size per character
+        // In a real PDF engine, this would use font metrics
+        return strlen($text) * $fontSize * 0.5;
+    }
+
+    private function calculateContentHeight(DOMNode $node, float $maxWidth, array $styles): float
+    {
+        $height = 0;
+        $fontSize = (float)($styles['font-size'] ?? 12);
+        $lineHeight = $fontSize * 1.2;
+
+        if ($node instanceof DOMText) {
+            if (trim($node->textContent) === "" && !in_array($node->parentNode->nodeName, ['p', 'div', 'h1', 'h2', 'h3'])) return 0;
+            $text = preg_replace('/\s+/', ' ', $node->textContent);
+            $words = preg_split('/(\s+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+            $currentLineWidth = 0;
+            $lines = 1;
+
+            foreach ($words as $word) {
+                if ($word === '') continue;
+                $wordWidth = $this->getTextWidth($word, $fontSize);
+
+                if ($currentLineWidth + $wordWidth > $maxWidth && !ctype_space($word)) {
+                    $lines++;
+                    $currentLineWidth = $wordWidth;
+                } else {
+                    $currentLineWidth += $wordWidth;
+                }
+            }
+            $height = $lines * $lineHeight;
+        } elseif ($node instanceof DOMElement) {
+            $tagName = strtolower($node->nodeName);
+            $nodeStyles = array_merge($styles, $this->parseInlineStyles($node->getAttribute('style')));
+
+            if ($tagName === 'br') {
+                $height = $lineHeight;
+            } elseif ($tagName === 'img') {
+                $height = (float)($node->getAttribute('height') ?: 100);
+            } elseif ($tagName === 'table') {
+                $rows = [];
+                $searchNodes = [$node];
+                while (!empty($searchNodes)) {
+                    $currentNode = array_shift($searchNodes);
+                    foreach ($currentNode->childNodes as $child) {
+                        if ($child instanceof DOMElement) {
+                            $cTagName = strtolower($child->nodeName);
+                            if ($cTagName === 'tr') {
+                                $rows[] = $child;
+                            } elseif (in_array($cTagName, ['thead', 'tbody', 'tfoot'])) {
+                                $searchNodes[] = $child;
+                            }
+                        }
+                    }
+                }
+
+                $maxCols = 0;
+                foreach ($rows as $row) {
+                    $cols = 0;
+                    foreach ($row->childNodes as $td) {
+                        if ($td instanceof DOMElement && ($td->nodeName === 'td' || $td->nodeName === 'th')) {
+                            $cols++;
+                        }
+                    }
+                    $maxCols = max($maxCols, $cols);
+                }
+
+                if ($maxCols > 0) {
+                    $colWidth = $maxWidth / $maxCols;
+                    $cellPadding = (float)($node->getAttribute('cellpadding') ?: 2);
+
+                    foreach ($rows as $row) {
+                        $maxRowHeight = 0;
+                        $rowHeightAttr = $row->getAttribute('height');
+                        if ($rowHeightAttr) $maxRowHeight = (float)$rowHeightAttr;
+
+                        foreach ($row->childNodes as $cell) {
+                            if ($cell instanceof DOMElement && ($cell->nodeName === 'td' || $cell->nodeName === 'th')) {
+                                $cellStyles = array_merge($nodeStyles, $this->parseInlineStyles($cell->getAttribute('style')));
+                                $cellContentHeight = 0;
+                                foreach ($cell->childNodes as $child) {
+                                    $cellContentHeight += $this->calculateContentHeight($child, $colWidth - (2 * $cellPadding), $cellStyles);
+                                }
+                                $tdHeightAttr = $cell->getAttribute('height');
+                                $minCellHeight = $tdHeightAttr ? (float)$tdHeightAttr : 0;
+                                $maxRowHeight = max($maxRowHeight, $cellContentHeight + (2 * $cellPadding), $minCellHeight);
+                            }
+                        }
+                        $height += ($maxRowHeight ?: 15);
+                    }
+                }
+            } else {
+                $currentBlockHeight = 0;
+                $currentInlineHeight = 0;
+                foreach ($node->childNodes as $child) {
+                    $childHeight = $this->calculateContentHeight($child, $maxWidth, $nodeStyles);
+                    if ($child instanceof DOMElement && in_array(strtolower($child->nodeName), ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'table'])) {
+                        $currentBlockHeight += $currentInlineHeight + $childHeight;
+                        $currentInlineHeight = 0;
+                    } else {
+                        $currentInlineHeight = max($currentInlineHeight, $childHeight);
+                    }
+                }
+                $height = $currentBlockHeight + $currentInlineHeight;
+
+                if (in_array($tagName, ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li'])) {
+                    $paddingTop = 0;
+                    if (isset($nodeStyles['padding-top'])) $paddingTop = (float)$nodeStyles['padding-top'];
+                    elseif (isset($nodeStyles['padding'])) $paddingTop = (float)$nodeStyles['padding'];
+
+                    $paddingBottom = 0;
+                    if (isset($nodeStyles['padding-bottom'])) $paddingBottom = (float)$nodeStyles['padding-bottom'];
+                    elseif (isset($nodeStyles['padding'])) $paddingBottom = (float)$nodeStyles['padding'];
+
+                    $height += $paddingTop + $paddingBottom + ($fontSize * 0.5) + 5;
+                    if (isset($nodeStyles['margin-bottom'])) $height += (float)$nodeStyles['margin-bottom'];
+                }
+            }
+        }
+
+        return $height;
     }
 }
